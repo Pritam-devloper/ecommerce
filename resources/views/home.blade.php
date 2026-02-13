@@ -1,168 +1,211 @@
 @extends('layouts.app')
-@section('title', 'AbhiShop - Online Shopping India')
+@section('title', 'AbhiShop - Handcrafted Vintage Designer Jewellery')
 @section('content')
 
-{{-- Category Nav Strip --}}
-@if($categories->count())
-<div class="bg-white shadow-sm">
-    <div class="max-w-[1440px] mx-auto px-4">
-        <div class="flex items-center gap-8 overflow-x-auto scrollbar-hide py-3">
-            @foreach($categories as $cat)
-            <a href="{{ route('category', $cat) }}" class="shrink-0 flex flex-col items-center gap-1.5 group min-w-[64px]">
-                <div class="w-16 h-16 rounded-full overflow-hidden bg-gray-50 flex items-center justify-center border-2 border-transparent group-hover:border-flipblue transition">
+<style>
+    .jewelry-serif { font-family: 'Playfair Display', Georgia, serif; }
+    .jewelry-sans { font-family: 'Montserrat', 'Roboto', sans-serif; }
+</style>
+
+{{-- Hero Section --}}
+<section class="relative h-[70vh] min-h-[500px] bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=1600');">
+    <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-black/30"></div>
+    <div class="relative h-full flex items-center">
+        <div class="max-w-7xl mx-auto px-6 md:px-12 text-white">
+            <p class="text-sm md:text-base tracking-[0.3em] uppercase mb-4 text-amber-200">Unique Handcrafted</p>
+            <h1 class="jewelry-serif text-4xl md:text-6xl lg:text-7xl font-light leading-tight mb-6">
+                VINTAGE DESIGNER<br>JEWELLERY
+            </h1>
+            <a href="{{ route('search') }}" class="inline-block bg-white text-gray-900 px-8 py-3 text-sm tracking-wider uppercase hover:bg-amber-100 transition">
+                Shop Now
+            </a>
+        </div>
+    </div>
+</section>
+
+{{-- New Collections --}}
+<section class="py-16 bg-stone-50">
+    <div class="max-w-7xl mx-auto px-6 md:px-12">
+        <div class="text-center mb-12">
+            <h2 class="jewelry-serif text-3xl md:text-4xl font-light text-gray-800 mb-3">Look at our new collections</h2>
+            <p class="text-gray-600 text-sm">Discover timeless pieces meticulously crafted with love and attention to detail</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            @foreach($categories->take(3) as $cat)
+            <a href="{{ route('category', $cat) }}" class="group relative overflow-hidden bg-white">
+                <div class="aspect-[3/4] overflow-hidden">
                     @if($cat->image)
-                        <img src="{{ asset('storage/' . $cat->image) }}" class="w-full h-full object-cover">
+                        <img src="{{ asset('storage/' . $cat->image) }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                     @else
-                        <i class="fas fa-tag text-flipblue text-lg"></i>
+                        <img src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                     @endif
                 </div>
-                <span class="text-xs font-medium text-gray-700 group-hover:text-flipblue text-center leading-tight">{{ $cat->name }}</span>
+                <div class="absolute bottom-0 left-0 right-0 bg-white/95 p-6 text-center">
+                    <h3 class="jewelry-serif text-xl font-light text-gray-800">{{ $cat->name }}</h3>
+                </div>
             </a>
             @endforeach
         </div>
     </div>
-</div>
-@endif
+</section>
 
-{{-- Banner Slider --}}
-<div class="max-w-[1440px] mx-auto px-4 mt-3">
-    @if($banners->count())
-    <div class="relative rounded-sm overflow-hidden" x-data="{ current: 0, total: {{ $banners->count() }} }" x-init="setInterval(() => current = (current + 1) % total, 4000)">
-        <div class="overflow-hidden relative h-52 md:h-72 bg-flipblue">
-            @foreach($banners as $i => $banner)
-            <div x-show="current === {{ $i }}" x-transition:enter="transition ease-out duration-500" x-transition:enter-start="opacity-0 translate-x-12" x-transition:enter-end="opacity-100 translate-x-0"
-                class="absolute inset-0">
-                @if($banner->image)
-                    <img src="{{ asset('storage/' . $banner->image) }}" class="w-full h-full object-cover">
-                @else
-                    <div class="w-full h-full bg-gradient-to-r from-flipblue to-blue-700 flex items-center justify-center text-white">
-                        <div class="text-center">
-                            <h2 class="text-3xl md:text-5xl font-bold mb-3">{{ $banner->title ?? 'Big Savings Days' }}</h2>
-                            @if($banner->link)<a href="{{ $banner->link }}" class="inline-block bg-white text-flipblue px-6 py-2 rounded-sm font-bold text-sm hover:bg-gray-100 mt-2">Shop Now</a>@endif
-                        </div>
+{{-- Story Section --}}
+<section class="py-20 bg-slate-700 text-white">
+    <div class="max-w-7xl mx-auto px-6 md:px-12">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div class="relative">
+                <div class="aspect-square rounded-lg overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800" class="w-full h-full object-cover">
+                </div>
+            </div>
+            <div>
+                <p class="text-amber-300 text-sm tracking-[0.3em] uppercase mb-4">Our Story</p>
+                <h2 class="jewelry-serif text-3xl md:text-4xl font-light mb-6">Amber Jewels, Handcrafted Elegance</h2>
+                <p class="text-gray-300 leading-relaxed mb-4">
+                    Each piece in our collection tells a story of timeless elegance and meticulous craftsmanship. From the initial sketch to the final polish, every detail is carefully considered to create jewellery that transcends trends.
+                </p>
+                <p class="text-gray-300 leading-relaxed mb-6">
+                    Our artisans blend traditional techniques with contemporary design, ensuring each creation is as unique as the person who wears it.
+                </p>
+                <a href="{{ route('search') }}" class="inline-block border border-white px-8 py-3 text-sm tracking-wider uppercase hover:bg-white hover:text-slate-700 transition">
+                    Explore Collection
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- Discover New Arrivals --}}
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-6 md:px-12">
+        <div class="text-center mb-12">
+            <h2 class="jewelry-serif text-3xl md:text-4xl font-light text-gray-800 mb-3">Discover New Arrivals</h2>
+            <p class="text-gray-600 text-sm">Handpicked pieces that define elegance and style</p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            @foreach($latest->take(4) as $product)
+            <div class="group">
+                <a href="{{ route('product.show', $product) }}" class="block">
+                    <div class="aspect-square bg-stone-50 mb-4 overflow-hidden relative">
+                        @if($product->thumbnail)
+                            @if(str_starts_with($product->thumbnail, 'http'))
+                                <img src="{{ $product->thumbnail }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            @else
+                                <img src="{{ asset('storage/' . $product->thumbnail) }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            @endif
+                        @else
+                            <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        @endif
+                        @if($product->discount_price)
+                        <span class="absolute top-3 right-3 bg-red-500 text-white text-xs px-2 py-1">SALE</span>
+                        @endif
                     </div>
-                @endif
+                    <h3 class="jewelry-sans text-sm text-gray-800 mb-2">{{ $product->name }}</h3>
+                    <div class="flex items-center gap-2">
+                        <span class="text-amber-700 font-medium">₹{{ number_format($product->final_price) }}</span>
+                        @if($product->discount_price)
+                        <span class="text-gray-400 text-sm line-through">₹{{ number_format($product->price) }}</span>
+                        @endif
+                    </div>
+                </a>
             </div>
-            @endforeach
-        </div>
-        <button @click="current = (current - 1 + total) % total" class="absolute left-0 top-0 h-full w-12 bg-white/20 hover:bg-white/40 flex items-center justify-center text-gray-700">
-            <i class="fas fa-chevron-left text-lg"></i>
-        </button>
-        <button @click="current = (current + 1) % total" class="absolute right-0 top-0 h-full w-12 bg-white/20 hover:bg-white/40 flex items-center justify-center text-gray-700">
-            <i class="fas fa-chevron-right text-lg"></i>
-        </button>
-        <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
-            @foreach($banners as $i => $banner)
-            <button @click="current = {{ $i }}" class="w-2 h-2 rounded-full transition" :class="current === {{ $i }} ? 'bg-white' : 'bg-white/50'"></button>
             @endforeach
         </div>
     </div>
-    @else
-    <div class="bg-gradient-to-r from-flipblue to-blue-700 h-52 md:h-72 rounded-sm flex items-center justify-center text-white text-center">
-        <div>
-            <h1 class="text-3xl md:text-5xl font-bold mb-3">Welcome to AbhiShop</h1>
-            <p class="text-lg mb-4 opacity-90">Discover amazing products at best prices</p>
-            <a href="{{ route('search') }}" class="bg-flipyellow text-white px-8 py-2.5 rounded-sm font-bold text-sm hover:bg-yellow-600 inline-block">Explore Now</a>
-        </div>
-    </div>
-    @endif
-</div>
+</section>
 
-<div class="max-w-[1440px] mx-auto px-4">
-
-    {{-- Flash Sale Section --}}
-    @if($flashSale->count())
-    <section class="bg-white rounded-sm shadow-sm mt-3 p-4">
-        <div class="flex items-center justify-between mb-4">
-            <div class="flex items-center gap-3">
-                <h2 class="text-xl font-bold text-gray-900">Flash Deals</h2>
-                <img src="https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/flashSaleEtc-a498f3.png" class="h-5 opacity-60" alt="">
-            </div>
-            <a href="{{ route('search') }}?flash=1" class="bg-flipblue text-white px-5 py-2 rounded-sm text-sm font-bold hover:bg-blue-700">VIEW ALL</a>
-        </div>
-        <div class="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
-            @foreach($flashSale as $product)
-            <div class="min-w-[180px] max-w-[200px] shrink-0">
-                @include('components.product-card', ['product' => $product])
-            </div>
-            @endforeach
-        </div>
-    </section>
-    @endif
-
-    {{-- Featured Products --}}
-    @if($featured->count())
-    <section class="bg-white rounded-sm shadow-sm mt-3 p-4">
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-xl font-bold text-gray-900">Best of Electronics</h2>
-            <a href="{{ route('search') }}" class="bg-flipblue text-white px-5 py-2 rounded-sm text-sm font-bold hover:bg-blue-700">VIEW ALL</a>
-        </div>
-        <div class="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
-            @foreach($featured as $product)
-            <div class="min-w-[180px] max-w-[200px] shrink-0">
-                @include('components.product-card', ['product' => $product])
-            </div>
-            @endforeach
-        </div>
-    </section>
-    @endif
-
-    {{-- Mid Banner --}}
-    <section class="mt-3 bg-gradient-to-r from-blue-600 to-flipblue rounded-sm shadow-sm p-6 md:p-8 flex items-center justify-between text-white">
-        <div>
-            <p class="text-sm font-medium opacity-80 uppercase tracking-widest">AbhiShop Exclusive</p>
-            <h2 class="text-2xl md:text-3xl font-bold mt-1">Top Offers on Fashion & More</h2>
-            <p class="text-sm opacity-80 mt-1">Get extra discounts with coupons</p>
-        </div>
-        <a href="{{ route('search') }}" class="shrink-0 bg-white text-flipblue px-6 py-2.5 rounded-sm font-bold text-sm hover:bg-gray-100">SHOP NOW</a>
-    </section>
-
-    {{-- Trending Products --}}
-    @if($trending->count())
-    <section class="bg-white rounded-sm shadow-sm mt-3 p-4">
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-xl font-bold text-gray-900">Trending Now <i class="fas fa-fire text-red-500 ml-1"></i></h2>
-            <a href="{{ route('search') }}?sort=popular" class="bg-flipblue text-white px-5 py-2 rounded-sm text-sm font-bold hover:bg-blue-700">VIEW ALL</a>
-        </div>
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
-            @foreach($trending as $product)
-                @include('components.product-card', ['product' => $product])
-            @endforeach
-        </div>
-    </section>
-    @endif
-
-    {{-- Latest Products --}}
-    @if($latest->count())
-    <section class="bg-white rounded-sm shadow-sm mt-3 p-4">
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-xl font-bold text-gray-900">Recently Added</h2>
-            <a href="{{ route('search') }}?sort=newest" class="bg-flipblue text-white px-5 py-2 rounded-sm text-sm font-bold hover:bg-blue-700">VIEW ALL</a>
-        </div>
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
-            @foreach($latest as $product)
-                @include('components.product-card', ['product' => $product])
-            @endforeach
-        </div>
-    </section>
-    @endif
-
-    {{-- Become a Seller CTA --}}
-    <section class="mt-3 mb-4">
-        <div class="bg-white rounded-sm shadow-sm p-6 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6">
-            <div class="flex items-center gap-4">
-                <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center">
-                    <i class="fas fa-store text-flipblue text-2xl"></i>
-                </div>
-                <div>
-                    <h2 class="text-xl font-bold text-gray-900">Sell on AbhiShop</h2>
-                    <p class="text-gray-500 text-sm">Join thousands of sellers already growing their business</p>
-                </div>
-            </div>
-            <a href="{{ route('seller.register') }}" class="bg-flipyellow text-white px-8 py-3 rounded-sm font-bold text-sm hover:bg-yellow-600 shrink-0">
-                Start Selling
+{{-- Limited Edition Banner --}}
+<section class="relative h-[60vh] min-h-[400px] bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=1600');">
+    <div class="absolute inset-0 bg-black/50"></div>
+    <div class="relative h-full flex items-center justify-center text-center">
+        <div class="max-w-2xl px-6">
+            <p class="text-amber-300 text-sm tracking-[0.3em] uppercase mb-4">Limited Collection</p>
+            <h2 class="jewelry-serif text-4xl md:text-5xl font-light text-white mb-6">
+                LIMITED EDITION &<br>EXCLUSIVE
+            </h2>
+            <a href="{{ route('search') }}" class="inline-block bg-white text-gray-900 px-8 py-3 text-sm tracking-wider uppercase hover:bg-amber-100 transition">
+                Shop Now
             </a>
         </div>
-    </section>
-</div>
+    </div>
+</section>
+
+{{-- Newsletter Section --}}
+<section class="py-16 bg-slate-700 text-white">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+        <h2 class="jewelry-serif text-3xl md:text-4xl font-light mb-4">Let's Stay in Touch</h2>
+        <p class="text-gray-300 mb-8">Be the first to know about new collections and exclusive offers</p>
+        <form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+            <input type="email" placeholder="Enter your email" class="flex-1 px-4 py-3 bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-amber-300">
+            <button type="submit" class="bg-amber-600 text-white px-8 py-3 text-sm tracking-wider uppercase hover:bg-amber-700 transition">
+                Subscribe
+            </button>
+        </form>
+    </div>
+</section>
+
+{{-- Store Section --}}
+<section class="py-16 bg-stone-50">
+    <div class="max-w-7xl mx-auto px-6 md:px-12">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="jewelry-serif text-3xl md:text-4xl font-light text-gray-800 mb-6">
+                    We're Here for You, In<br>Person and Online
+                </h2>
+                <p class="text-gray-600 leading-relaxed mb-6">
+                    Visit our boutique to experience the beauty of our collections firsthand, or explore our complete range online from the comfort of your home. Our expert team is always ready to help you find the perfect piece.
+                </p>
+                <a href="{{ route('search') }}" class="inline-block border border-gray-800 text-gray-800 px-8 py-3 text-sm tracking-wider uppercase hover:bg-gray-800 hover:text-white transition">
+                    Shop Online
+                </a>
+            </div>
+            <div class="relative">
+                <div class="aspect-[4/3] rounded-lg overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{{-- Featured Categories --}}
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-6 md:px-12">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            @foreach($categories->take(3) as $cat)
+            <a href="{{ route('category', $cat) }}" class="group relative overflow-hidden">
+                <div class="aspect-[3/4] overflow-hidden bg-stone-100">
+                    @if($cat->image)
+                        <img src="{{ asset('storage/' . $cat->image) }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    @else
+                        <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    @endif
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6">
+                    <div class="text-white">
+                        <h3 class="jewelry-serif text-2xl font-light mb-2">{{ $cat->name }}</h3>
+                        <p class="text-sm text-gray-200">Explore Collection →</p>
+                    </div>
+                </div>
+            </a>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+{{-- Brand Footer --}}
+<section class="py-20 bg-stone-50">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+        <h2 class="jewelry-serif text-6xl md:text-8xl font-light text-gray-800 mb-8 tracking-wider">AbhiShop</h2>
+        <div class="flex justify-center gap-8 text-gray-600">
+            <a href="#" class="hover:text-gray-900"><i class="fab fa-facebook-f text-xl"></i></a>
+            <a href="#" class="hover:text-gray-900"><i class="fab fa-instagram text-xl"></i></a>
+            <a href="#" class="hover:text-gray-900"><i class="fab fa-pinterest text-xl"></i></a>
+            <a href="#" class="hover:text-gray-900"><i class="fab fa-twitter text-xl"></i></a>
+        </div>
+    </div>
+</section>
+
 @endsection
