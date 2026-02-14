@@ -14,14 +14,8 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // ── Admin User ──
-        User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@shopzone.com',
-            'password' => Hash::make('password'),
-            'role' => 'admin',
-            'is_active' => true,
-        ]);
+        // ── Admin/Seller User (Single Seller Model) ──
+        $this->call(AdminUserSeeder::class);
 
         // ── Buyer Users ──
         $buyer1 = User::create([

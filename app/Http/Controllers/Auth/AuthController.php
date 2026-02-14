@@ -32,14 +32,18 @@ class AuthController extends Controller
                 return back()->withErrors(['email' => 'Your account has been suspended.']);
             }
 
-            return match ($user->role) {
-                'admin' => redirect()->route('admin.dashboard'),
-                'seller' => redirect()->route('seller.dashboard'),
-                default => redirect()->route('home'),
-            };
+            // Check if this is the admin/seller email
+            $sellerEmail = env('SELLER_EMAIL', 'admin@shiivaraa.com');
+            
+            if ($user->email === $sellerEmail || $user->role === 'admin') {
+                return redirect()->route('admin.dashboard')->with('success', 'Welcome back! Ready to manage your Shiivaraa store.');
+            }
+
+            // Regular customer login
+            return redirect()->route('home')->with('success', 'Welcome back!');
         }
 
-        return back()->withErrors(['email' => 'Invalid credentials.'])->onlyInput('email');
+        return back()->withErrors(['email' => 'Invalid email or password.'])->onlyInput('email');
     }
 
     public function showRegister()
@@ -66,39 +70,7 @@ class AuthController extends Controller
         return redirect()->route('home');
     }
 
-    public function showSellerRegister()
-    {
-        return view('auth.seller-register');
-    }
 
-    public function sellerRegister(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:8|confirmed',
-            'shop_name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-        ]);
-
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => $request->password,
-            'role' => 'seller',
-            'phone' => $request->phone,
-        ]);
-
-        Seller::create([
-            'user_id' => $user->id,
-            'shop_name' => $request->shop_name,
-            'slug' => Str::slug($request->shop_name) . '-' . $user->id,
-            'phone' => $request->phone,
-        ]);
-
-        Auth::login($user);
-        return redirect()->route('seller.pending');
-    }
 
     public function logout(Request $request)
     {

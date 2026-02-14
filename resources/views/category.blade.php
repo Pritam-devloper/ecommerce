@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $category->name . ' - AETHER')
+@section('title', $category->name . ' - Shiivaraa')
 @section('content')
 
 <div class="bg-stone-50 min-h-screen">

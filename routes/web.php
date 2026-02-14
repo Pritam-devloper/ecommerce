@@ -21,8 +21,6 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
-    Route::get('/seller/register', [AuthController::class, 'showSellerRegister'])->name('seller.register');
-    Route::post('/seller/register', [AuthController::class, 'sellerRegister']);
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
@@ -62,40 +60,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/product/{product}/review', [BuyerController::class, 'storeReview'])->name('review.store');
 });
 
-// ===== SELLER ROUTES =====
-Route::middleware(['auth', 'role:seller'])->prefix('seller')->name('seller.')->group(function () {
-    Route::get('/pending', [SellerController::class, 'pending'])->name('pending');
-
-    Route::middleware('seller.approved')->group(function () {
-        Route::get('/dashboard', [SellerController::class, 'dashboard'])->name('dashboard');
-
-        // Products
-        Route::get('/products', [SellerController::class, 'products'])->name('products');
-        Route::get('/products/create', [SellerController::class, 'createProduct'])->name('products.create');
-        Route::post('/products', [SellerController::class, 'storeProduct'])->name('products.store');
-        Route::get('/products/{product}/edit', [SellerController::class, 'editProduct'])->name('products.edit');
-        Route::put('/products/{product}', [SellerController::class, 'updateProduct'])->name('products.update');
-        Route::delete('/products/{product}', [SellerController::class, 'deleteProduct'])->name('products.delete');
-
-        // Orders
-        Route::get('/orders', [SellerController::class, 'orders'])->name('orders');
-        Route::get('/orders/{order}', [SellerController::class, 'orderDetail'])->name('orders.detail');
-        Route::patch('/orders/{order}/status', [SellerController::class, 'updateOrderStatus'])->name('orders.status');
-
-        // Coupons
-        Route::get('/coupons', [SellerController::class, 'coupons'])->name('coupons');
-        Route::post('/coupons', [SellerController::class, 'storeCoupon'])->name('coupons.store');
-        Route::delete('/coupons/{coupon}', [SellerController::class, 'deleteCoupon'])->name('coupons.delete');
-
-        // Wallet
-        Route::get('/wallet', [SellerController::class, 'wallet'])->name('wallet');
-        Route::post('/wallet/withdraw', [SellerController::class, 'requestWithdraw'])->name('wallet.withdraw');
-
-        // Profile
-        Route::get('/profile', [SellerController::class, 'profile'])->name('profile');
-        Route::put('/profile', [SellerController::class, 'updateProfile'])->name('profile.update');
-    });
-});
+// ===== SELLER ROUTES (Removed - Single Seller Model) =====
+// All seller functionality is now handled through admin routes
 
 // ===== ADMIN ROUTES =====
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -112,6 +78,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     // Products
     Route::get('/products', [AdminController::class, 'products'])->name('products');
+    Route::get('/products/create', [AdminController::class, 'createProduct'])->name('products.create');
+    Route::post('/products', [AdminController::class, 'storeProduct'])->name('products.store');
     Route::patch('/products/{product}/approve', [AdminController::class, 'approveProduct'])->name('products.approve');
     Route::patch('/products/{product}/reject', [AdminController::class, 'rejectProduct'])->name('products.reject');
     Route::delete('/products/{product}', [AdminController::class, 'deleteProduct'])->name('products.delete');

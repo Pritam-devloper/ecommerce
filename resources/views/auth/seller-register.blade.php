@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Become a Seller - AETHER')
+@section('title', 'Become a Seller - Shiivaraa')
 @section('content')
 
 <div class="min-h-screen flex items-center justify-center px-6 py-12 bg-stone-50">
@@ -10,7 +10,7 @@
             <div class="absolute inset-0 bg-gradient-to-br from-slate-900/80 to-slate-800/60"></div>
             <div class="relative h-full flex flex-col justify-between p-12 text-white">
                 <div>
-                    <h1 class="jewelry-serif text-4xl font-light mb-4">Sell on AETHER</h1>
+                    <h1 class="jewelry-serif text-4xl font-light mb-4">Sell on Shiivaraa</h1>
                     <p class="text-gray-200 leading-relaxed mb-6">
                         Join our curated marketplace and showcase your exquisite jewelry to discerning customers worldwide.
                     </p>
@@ -43,7 +43,7 @@
         <div class="p-12 flex flex-col justify-center">
             <div class="mb-8">
                 <h2 class="jewelry-serif text-3xl font-light text-gray-900 mb-2">Seller Registration</h2>
-                <p class="text-gray-600 text-sm">Start your journey as an AETHER seller</p>
+                <p class="text-gray-600 text-sm">Start your journey as an Shiivaraa seller</p>
             </div>
 
             <form method="POST" action="{{ route('seller.register') }}" class="space-y-5">
@@ -143,7 +143,7 @@
 
                 {{-- Terms --}}
                 <p class="text-xs text-gray-500 text-center">
-                    By registering, you agree to AETHER's 
+                    By registering, you agree to Shiivaraa's 
                     <a href="#" class="text-amber-700 hover:underline">Seller Terms</a> and 
                     <a href="#" class="text-amber-700 hover:underline">Privacy Policy</a>
                 </p>
