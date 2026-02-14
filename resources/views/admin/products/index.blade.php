@@ -3,24 +3,20 @@
 @section('page-title', 'Products')
 
 @section('sidebar')
-<a href="{{ route('admin.dashboard') }}" class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-white/10"><i class="fas fa-tachometer-alt w-8"></i><span x-show="sidebarOpen">Dashboard</span></a>
-<a href="{{ route('admin.users') }}" class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-white/10"><i class="fas fa-users w-8"></i><span x-show="sidebarOpen">Users</span></a>
-<a href="{{ route('admin.sellers') }}" class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-white/10"><i class="fas fa-store w-8"></i><span x-show="sidebarOpen">Sellers</span></a>
-<a href="{{ route('admin.products') }}" class="flex items-center px-4 py-3 rounded-lg text-white bg-flipblue"><i class="fas fa-box w-8"></i><span x-show="sidebarOpen">Products</span></a>
-<a href="{{ route('admin.orders') }}" class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-white/10"><i class="fas fa-shopping-bag w-8"></i><span x-show="sidebarOpen">Orders</span></a>
-<a href="{{ route('admin.categories') }}" class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-white/10"><i class="fas fa-tags w-8"></i><span x-show="sidebarOpen">Categories</span></a>
-<a href="{{ route('admin.banners') }}" class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-white/10"><i class="fas fa-image w-8"></i><span x-show="sidebarOpen">Banners</span></a>
-<a href="{{ route('admin.payments') }}" class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-white/10"><i class="fas fa-credit-card w-8"></i><span x-show="sidebarOpen">Payments</span></a>
-<a href="{{ route('admin.settings') }}" class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-white/10"><i class="fas fa-cog w-8"></i><span x-show="sidebarOpen">Settings</span></a>
-<a href="{{ route('admin.reports') }}" class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-white/10"><i class="fas fa-chart-bar w-8"></i><span x-show="sidebarOpen">Reports</span></a>
+@include('admin.partials.sidebar')
 @endsection
 
 @section('content')
-<div class="flex gap-2 mb-6 flex-wrap">
-    <a href="{{ route('admin.products') }}" class="px-4 py-2 rounded-lg text-sm font-medium {{ !request('status') ? 'bg-flipblue text-white' : 'bg-white text-gray-600' }}">All</a>
-    @foreach(['pending','approved','rejected'] as $s)
-    <a href="{{ route('admin.products', ['status' => $s]) }}" class="px-4 py-2 rounded-lg text-sm font-medium {{ request('status') === $s ? 'bg-flipblue text-white' : 'bg-white text-gray-600' }}">{{ ucfirst($s) }}</a>
-    @endforeach
+<div class="flex justify-between items-center mb-6">
+    <div class="flex gap-2 flex-wrap">
+        <a href="{{ route('admin.products') }}" class="px-4 py-2 rounded-lg text-sm font-medium {{ !request('status') ? 'bg-amber-600 text-white' : 'bg-white text-gray-600 border' }}">All</a>
+        @foreach(['pending','approved','rejected'] as $s)
+        <a href="{{ route('admin.products', ['status' => $s]) }}" class="px-4 py-2 rounded-lg text-sm font-medium {{ request('status') === $s ? 'bg-amber-600 text-white' : 'bg-white text-gray-600 border' }}">{{ ucfirst($s) }}</a>
+        @endforeach
+    </div>
+    <a href="{{ route('admin.products.create') }}" class="bg-amber-600 text-white px-6 py-3 rounded-lg hover:bg-amber-700 transition font-medium">
+        <i class="fas fa-plus mr-2"></i>Add Product
+    </a>
 </div>
 
 <div class="bg-white rounded-xl shadow-sm overflow-hidden">
@@ -31,8 +27,12 @@
         <tr class="border-t hover:bg-gray-50">
             <td class="p-4">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-gray-100 rounded overflow-hidden shrink-0">
-                        @if($product->thumbnail)<img src="{{ asset('storage/'.$product->thumbnail) }}" class="w-full h-full object-cover">@endif
+                    <div class="w-10 h-10 bg-gray-100 rounded overflow-hidden shrink-0 flex items-center justify-center">
+                        @if($product->thumbnail)
+                            <img src="{{ asset('storage/'.$product->thumbnail) }}" class="w-full h-full object-cover" alt="{{ $product->name }}">
+                        @else
+                            <i class="fas fa-gem text-gray-400"></i>
+                        @endif
                     </div>
                     <span class="font-medium">{{ Str::limit($product->name, 25) }}</span>
                 </div>
@@ -57,7 +57,13 @@
             </td>
         </tr>
         @empty
-        <tr><td colspan="7" class="p-8 text-center text-gray-500">No products found.</td></tr>
+        <tr><td colspan="7" class="p-8 text-center text-gray-500">
+            <i class="fas fa-gem text-4xl text-gray-300 mb-3"></i>
+            <p class="mb-2">No products found.</p>
+            <a href="{{ route('admin.products.create') }}" class="text-amber-600 hover:text-amber-700 font-medium">
+                <i class="fas fa-plus mr-1"></i>Add your first product
+            </a>
+        </td></tr>
         @endforelse
         </tbody>
     </table>

@@ -30,8 +30,8 @@
         {{-- Sidebar --}}
         <aside :class="sidebarOpen ? 'w-60' : 'w-16'" class="bg-flipdark text-white transition-all duration-300 fixed h-full z-40">
             <div class="h-14 flex items-center justify-between px-4 border-b border-white/10">
-                <a href="{{ route('home') }}" class="text-lg font-bold italic" x-show="sidebarOpen">
-                    Abhi<span class="text-flipyellow">Shop</span>
+                <a href="{{ route('home') }}" class="text-lg font-bold" x-show="sidebarOpen">
+                    <span class="text-amber-400">Shiivaraa</span>
                 </a>
                 <button @click="sidebarOpen = !sidebarOpen" class="text-gray-400 hover:text-white">
                     <i class="fas" :class="sidebarOpen ? 'fa-times' : 'fa-bars'"></i>

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Login - AETHER')
+@section('title', 'Login - Shiivaraa')
 @section('content')
 
 <div class="min-h-screen flex items-center justify-center px-6 py-12 bg-stone-50">
@@ -106,7 +106,7 @@
 
                 {{-- Terms --}}
                 <p class="text-xs text-gray-500 text-center">
-                    By continuing, you agree to AETHER's 
+                    By continuing, you agree to Shiivaraa's 
                     <a href="#" class="text-amber-700 hover:underline">Terms of Service</a> and 
                     <a href="#" class="text-amber-700 hover:underline">Privacy Policy</a>
                 </p>
@@ -118,7 +118,7 @@
                     <div class="w-full border-t border-gray-200"></div>
                 </div>
                 <div class="relative flex justify-center text-sm">
-                    <span class="px-4 bg-white text-gray-500">New to AETHER?</span>
+                    <span class="px-4 bg-white text-gray-500">New to Shiivaraa?</span>
                 </div>
             </div>
 
@@ -127,10 +127,6 @@
                 <a href="{{ route('register') }}" 
                     class="block w-full border-2 border-gray-900 text-gray-900 py-4 text-sm tracking-wider uppercase hover:bg-gray-900 hover:text-white transition text-center">
                     Create Account
-                </a>
-                <a href="{{ route('seller.register') }}" 
-                    class="block text-center text-sm text-gray-600 hover:text-amber-700 transition">
-                    <i class="fas fa-store mr-2"></i>Register as a Seller
                 </a>
             </div>
         </div>

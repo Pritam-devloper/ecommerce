@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', ($q ? 'Search: ' . $q : 'Shop All') . ' - AETHER')
+@section('title', ($q ? 'Search: ' . $q : 'Shop All') . ' - Shiivaraa')
 @section('content')
 
 <div class="bg-stone-50 min-h-screen">

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'My Wishlist - AETHER')
+@section('title', 'My Wishlist - Shiivaraa')
 @section('content')
 
 <div class="bg-stone-50 min-h-screen">

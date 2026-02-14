@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Create Account - AETHER')
+@section('title', 'Create Account - Shiivaraa')
 @section('content')
 
 <div class="min-h-screen flex items-center justify-center px-6 py-12 bg-stone-50">
@@ -10,7 +10,7 @@
             <div class="absolute inset-0 bg-gradient-to-br from-slate-900/80 to-slate-800/60"></div>
             <div class="relative h-full flex flex-col justify-between p-12 text-white">
                 <div>
-                    <h1 class="jewelry-serif text-4xl font-light mb-4">Join AETHER</h1>
+                    <h1 class="jewelry-serif text-4xl font-light mb-4">Join Shiivaraa</h1>
                     <p class="text-gray-200 leading-relaxed">
                         Create an account to unlock exclusive access to our handcrafted jewelry collections and personalized shopping experience.
                     </p>
@@ -121,7 +121,7 @@
 
                 {{-- Terms --}}
                 <p class="text-xs text-gray-500 text-center">
-                    By creating an account, you agree to AETHER's 
+                    By creating an account, you agree to Shiivaraa's 
                     <a href="#" class="text-amber-700 hover:underline">Terms of Service</a> and 
                     <a href="#" class="text-amber-700 hover:underline">Privacy Policy</a>
                 </p>

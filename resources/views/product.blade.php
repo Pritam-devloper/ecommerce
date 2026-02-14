@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', $product->name . ' - AETHER')
+@section('title', $product->name . ' - Shiivaraa')
 @section('content')
 
 <div class="max-w-7xl mx-auto px-6 md:px-12 py-8">
@@ -14,29 +14,31 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
         {{-- Left: Product Images --}}
-        <div x-data="{ mainImage: '{{ $product->thumbnail ?? 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800' }}' }">
+        <div x-data="{ mainImage: '{{ $product->thumbnail ? (str_starts_with($product->thumbnail, 'http') ? $product->thumbnail : asset('storage/' . $product->thumbnail)) : 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800' }}' }">
             {{-- Main Image --}}
             <div class="bg-stone-100 flex items-center justify-center aspect-square mb-4 overflow-hidden sticky top-24">
                 <img :src="mainImage" alt="{{ $product->name }}" class="w-full h-full object-cover">
             </div>
 
             {{-- Thumbnails --}}
-            @if(($product->images && count($product->images)) || $product->thumbnail)
-            <div class="flex gap-3">
+            @php
+                $images = is_array($product->images) ? $product->images : [];
+                $hasImages = !empty($images) || $product->thumbnail;
+            @endphp
+            @if($hasImages)
+            <div class="flex gap-3 overflow-x-auto">
                 @if($product->thumbnail)
-                <button @click="mainImage = '{{ $product->thumbnail }}'" 
-                    class="w-20 h-20 bg-stone-100 overflow-hidden border-2 border-transparent hover:border-amber-600 focus:border-amber-600 transition">
-                    <img src="{{ $product->thumbnail }}" class="w-full h-full object-cover">
+                <button @click="mainImage = '{{ str_starts_with($product->thumbnail, 'http') ? $product->thumbnail : asset('storage/' . $product->thumbnail) }}'" 
+                    class="w-20 h-20 bg-stone-100 overflow-hidden border-2 border-transparent hover:border-amber-600 focus:border-amber-600 transition shrink-0">
+                    <img src="{{ str_starts_with($product->thumbnail, 'http') ? $product->thumbnail : asset('storage/' . $product->thumbnail) }}" class="w-full h-full object-cover" alt="Thumbnail">
                 </button>
                 @endif
-                @if($product->images)
-                @foreach($product->images as $img)
+                @foreach($images as $img)
                 <button @click="mainImage = '{{ str_starts_with($img, 'http') ? $img : asset('storage/' . $img) }}'" 
-                    class="w-20 h-20 bg-stone-100 overflow-hidden border-2 border-transparent hover:border-amber-600 focus:border-amber-600 transition">
-                    <img src="{{ str_starts_with($img, 'http') ? $img : asset('storage/' . $img) }}" class="w-full h-full object-cover">
+                    class="w-20 h-20 bg-stone-100 overflow-hidden border-2 border-transparent hover:border-amber-600 focus:border-amber-600 transition shrink-0">
+                    <img src="{{ str_starts_with($img, 'http') ? $img : asset('storage/' . $img) }}" class="w-full h-full object-cover" alt="Product image">
                 </button>
                 @endforeach
-                @endif
             </div>
             @endif
         </div>
@@ -158,7 +160,7 @@
                 </p>
                 @endif
                 <p class="text-sm text-gray-600">
-                    <span class="font-medium">Seller:</span> {{ $product->seller->shop_name ?? 'AETHER' }}
+                    <span class="font-medium">Seller:</span> {{ $product->seller->shop_name ?? 'Shiivaraa' }}
                 </p>
             </div>
 

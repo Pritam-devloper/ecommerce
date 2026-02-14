@@ -31,6 +31,31 @@
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         .jewelry-serif { font-family: 'Playfair Display', Georgia, serif; }
         .jewelry-sans { font-family: 'Montserrat', 'Roboto', sans-serif; }
+        
+        /* Animated Logo Shimmer */
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        
+        .logo-shimmer {
+            background: linear-gradient(90deg, #d97706 0%, #fbbf24 50%, #f59e0b 75%, #d97706 100%);
+            background-size: 1000px 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 4s infinite linear;
+        }
+        
+        /* Pulse animation for logo */
+        @keyframes pulse-glow {
+            0%, 100% { text-shadow: 0 0 10px rgba(217, 119, 6, 0.3); }
+            50% { text-shadow: 0 0 20px rgba(217, 119, 6, 0.6); }
+        }
+        
+        .logo-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
     </style>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
@@ -57,8 +82,11 @@
         <div class="max-w-7xl mx-auto px-6">
             <div class="flex items-center justify-between h-20">
                 {{-- Logo --}}
-                <a href="{{ route('home') }}" class="jewelry-serif text-3xl font-light tracking-wider text-gray-800 hover:text-amber-700 transition">
-                    AbhiShop
+                <a href="{{ route('home') }}" class="flex flex-col leading-none group">
+                    <span class="jewelry-serif text-3xl font-light tracking-wider logo-shimmer transition-all duration-300 group-hover:scale-105">
+                        Shiivaraa
+                    </span>
+                    <span class="text-[9px] tracking-widest text-gray-500 uppercase">Money Magnet Stones</span>
                 </a>
 
                 {{-- Desktop Navigation --}}
@@ -230,11 +258,7 @@
                             <i class="fas fa-tachometer-alt w-6 text-amber-600"></i>Admin Panel
                         </a>
                     @endif
-                    @if(auth()->user()->isSeller())
-                        <a href="{{ route('seller.dashboard') }}" class="block px-6 py-4 border-b border-gray-100 hover:bg-stone-50 text-gray-700 hover:text-amber-700 transition">
-                            <i class="fas fa-store w-6 text-amber-600"></i>Seller Dashboard
-                        </a>
-                    @endif
+
                     <form method="POST" action="{{ route('logout') }}">@csrf
                         <button class="block w-full text-left px-6 py-4 border-b border-gray-100 hover:bg-stone-50 text-red-600 transition">
                             <i class="fas fa-power-off w-6"></i>Logout
@@ -286,15 +310,16 @@
         <div class="max-w-7xl mx-auto px-6 md:px-12 py-16">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 pb-12 border-b border-slate-700">
                 <div>
-                    <h3 class="jewelry-serif text-2xl text-white mb-6">AbhiShop</h3>
+                    <h3 class="jewelry-serif text-2xl text-white mb-2 logo-shimmer">Shiivaraa</h3>
+                    <p class="text-xs text-amber-400 uppercase tracking-wider mb-4">Money Magnet Stones Marketplace</p>
                     <p class="text-gray-400 leading-relaxed mb-6">
-                        Crafting timeless elegance through handcrafted vintage designer jewellery since 2020.
+                        Your trusted marketplace for authentic money magnet stones, healing crystals, and spiritual gemstones from verified sellers worldwide.
                     </p>
                     <div class="flex gap-4 text-lg">
-                        <a href="#" class="hover:text-amber-400 transition"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="hover:text-amber-400 transition"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="hover:text-amber-400 transition"><i class="fab fa-pinterest"></i></a>
-                        <a href="#" class="hover:text-amber-400 transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="hover:text-amber-400 transition transform hover:scale-110"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="hover:text-amber-400 transition transform hover:scale-110"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="hover:text-amber-400 transition transform hover:scale-110"><i class="fab fa-pinterest"></i></a>
+                        <a href="#" class="hover:text-amber-400 transition transform hover:scale-110"><i class="fab fa-twitter"></i></a>
                     </div>
                 </div>
                 <div>
@@ -321,7 +346,7 @@
                     <ul class="space-y-3">
                         <li><a href="#" class="hover:text-amber-400 transition">Our Story</a></li>
                         <li><a href="#" class="hover:text-amber-400 transition">Craftsmanship</a></li>
-                        <li><a href="{{ route('seller.register') }}" class="hover:text-amber-400 transition">Become a Seller</a></li>
+                        <li><a href="#" class="hover:text-amber-400 transition">Authenticity</a></li>
                         <li><a href="#" class="hover:text-amber-400 transition">Privacy Policy</a></li>
                         <li><a href="#" class="hover:text-amber-400 transition">Terms & Conditions</a></li>
                     </ul>

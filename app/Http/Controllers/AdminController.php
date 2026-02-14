@@ -20,6 +20,7 @@ class AdminController extends Controller
     {
         $totalUsers = User::where('role', 'buyer')->count();
         $totalSellers = Seller::count();
+        $totalProducts = Product::count();
         $totalOrders = Order::count();
         $totalRevenue = Order::where('payment_status', 'paid')->sum('total');
         $pendingOrders = Order::where('status', 'pending')->count();
@@ -28,7 +29,7 @@ class AdminController extends Controller
         $topProducts = Product::withCount('orderItems')->orderByDesc('order_items_count')->take(5)->get();
 
         return view('admin.dashboard', compact(
-            'totalUsers', 'totalSellers', 'totalOrders', 'totalRevenue',
+            'totalUsers', 'totalSellers', 'totalProducts', 'totalOrders', 'totalRevenue',
             'pendingOrders', 'pendingSellers', 'recentOrders', 'topProducts'
         ));
     }
@@ -76,6 +77,64 @@ class AdminController extends Controller
         if ($request->status) $query->where('status', $request->status);
         $products = $query->latest()->paginate(15);
         return view('admin.products.index', compact('products'));
+    }
+
+    public function createProduct()
+    {
+        $categories = Category::where('is_active', true)->get();
+        return view('admin.products.create', compact('categories'));
+    }
+
+    public function storeProduct(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'discount_price' => 'nullable|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'sku' => 'nullable|string|max:100',
+            'brand' => 'nullable|string|max:100',
+            'thumbnail' => 'required|image|max:2048',
+            'images.*' => 'nullable|image|max:2048',
+        ]);
+
+        $data = $request->except(['thumbnail', 'images']);
+        $data['slug'] = Str::slug($request->name) . '-' . time();
+        $data['status'] = 'approved'; // Auto-approve admin products
+        $data['is_active'] = true;
+        
+        // For single seller, use first seller or create one
+        $seller = Seller::first();
+        if (!$seller) {
+            // Create a default seller for admin
+            $seller = Seller::create([
+                'user_id' => auth()->id(),
+                'shop_name' => 'Shiivaraa Store',
+                'slug' => 'shiivaraa-store',
+                'status' => 'approved',
+            ]);
+        }
+        $data['seller_id'] = $seller->id;
+
+        // Handle thumbnail
+        if ($request->hasFile('thumbnail')) {
+            $data['thumbnail'] = $request->file('thumbnail')->store('products', 'public');
+        }
+
+        $product = Product::create($data);
+
+        // Handle additional images
+        if ($request->hasFile('images')) {
+            $images = [];
+            foreach ($request->file('images') as $image) {
+                $images[] = $image->store('products', 'public');
+            }
+            $product->update(['images' => json_encode($images)]);
+        }
+
+        return redirect()->route('admin.products')->with('success', 'Product added successfully!');
     }
 
     public function approveProduct(Product $product)
