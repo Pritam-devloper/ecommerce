@@ -1,6 +1,6 @@
 # Single Seller Setup Guide
 
-This application has been converted from a multi-vendor marketplace to a single-seller e-commerce website for **Shiivaraa Money Magnet Stones**.
+This application has been converted from a multi-vendor marketplace to a single-seller e-commerce website for **Shiivaraa Crystal & gems stone**.
 
 ## What Changed
 

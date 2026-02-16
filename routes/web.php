@@ -9,6 +9,77 @@ use App\Http\Controllers\SellerController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AuthController;
 
+// ===== API ROUTES =====
+Route::get('/api/search-suggestions', function (Illuminate\Http\Request $request) {
+    $query = $request->get('q', '');
+    
+    if (strlen($query) < 2) {
+        return response()->json([]);
+    }
+    
+    // Search products (only available/in-stock)
+    $products = \App\Models\Product::approved()
+        ->active()
+        ->where('stock', '>', 0) // Only show products with stock
+        ->where(function($q) use ($query) {
+            $q->where('name', 'like', "%{$query}%")
+              ->orWhere('description', 'like', "%{$query}%")
+              ->orWhere('brand', 'like', "%{$query}%");
+        })
+        ->with('category')
+        ->limit(5)
+        ->get()
+        ->map(function($product) {
+            return [
+                'id' => $product->id,
+                'name' => $product->name,
+                'category' => $product->category->name ?? '',
+                'price' => number_format($product->final_price, 0),
+                'stock' => $product->stock,
+                'image' => $product->thumbnail 
+                    ? (str_starts_with($product->thumbnail, 'http') 
+                        ? $product->thumbnail 
+                        : asset('storage/' . $product->thumbnail))
+                    : asset('images/placeholder.png'),
+                'url' => route('product.show', $product),
+            ];
+        });
+    
+    // Search categories
+    $categories = \App\Models\Category::where('is_active', true)
+        ->where('name', 'like', "%{$query}%")
+        ->withCount(['products' => function($q) {
+            $q->approved()->active()->where('stock', '>', 0);
+        }])
+        ->having('products_count', '>', 0)
+        ->limit(3)
+        ->get()
+        ->map(function($category) {
+            return [
+                'id' => $category->id,
+                'name' => $category->name,
+                'count' => $category->products_count,
+                'url' => route('category', $category),
+            ];
+        });
+    
+    return response()->json([
+        'products' => $products,
+        'categories' => $categories,
+    ]);
+});
+
+// Get user's recent searches
+Route::get('/api/recent-searches', function () {
+    if (auth()->check()) {
+        $searches = \App\Models\SearchHistory::getUserRecentSearches(auth()->id(), 5);
+    } else {
+        $searches = [];
+    }
+    
+    return response()->json($searches);
+});
+
 // ===== PUBLIC ROUTES =====
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/category/{category}', [HomeController::class, 'category'])->name('category');

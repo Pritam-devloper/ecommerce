@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Shiivaraa - Money Magnet Stones, Spiritual Crystals & Healing Gemstones Marketplace')
+@section('title', 'Shiivaraa - Crystal & gems stone, Spiritual Crystals & Healing Gemstones Marketplace')
 @section('content')
 
 <style>
@@ -49,42 +49,97 @@
 
 {{-- Hero Banner Carousel --}}
 @if($banners->count())
-<section class="relative" x-data="{ current: 0, total: {{ $banners->count() }} }" x-init="setInterval(() => current = (current + 1) % total, 5000)">
-    <div class="relative overflow-hidden">
-        @foreach($banners as $i => $banner)
-        <div x-show="current === {{ $i }}" 
-            x-transition:enter="transition ease-out duration-700" 
-            x-transition:enter-start="opacity-0" 
-            x-transition:enter-end="opacity-100"
-            class="relative h-[400px] md:h-[500px] bg-cover bg-center"
-            style="background-image: url('{{ $banner->image ? asset('storage/' . $banner->image) : 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=1600' }}');">
-            <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent"></div>
-            <div class="relative h-full max-w-7xl mx-auto px-6 md:px-12 flex items-center">
-                <div class="text-white max-w-xl">
-                    @if($banner->title)
-                    <h1 class="jewelry-serif text-4xl md:text-6xl font-light mb-4">{{ $banner->title }}</h1>
-                    @endif
-                    @if($banner->subtitle)
-                    <p class="text-lg md:text-xl mb-6 text-gray-200">{{ $banner->subtitle }}</p>
-                    @endif
-                    @if($banner->link)
-                    <a href="{{ $banner->link }}" class="inline-block bg-white text-gray-900 px-8 py-3 text-sm tracking-wider uppercase hover:bg-amber-100 transition">
-                        Shop Now
-                    </a>
-                    @endif
+<section class="relative">
+    <div x-data="{ current: 0, total: {{ $banners->count() }} }" x-init="setInterval(() => current = (current + 1) % total, 6000)">
+        {{-- Carousel Slides --}}
+        <div class="relative h-[420px] md:h-[520px] overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+            @foreach($banners as $i => $banner)
+            <div x-show="current === {{ $i }}" 
+                x-transition:enter="transition ease-out duration-700" 
+                x-transition:enter-start="opacity-0 scale-110" 
+                x-transition:enter-end="opacity-100 scale-100"
+                class="absolute inset-0">
+                
+                {{-- Background Image with Parallax Effect --}}
+                <div class="absolute inset-0">
+                    <img src="{{ $banner->image ? asset('storage/' . $banner->image) : 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=1600' }}" 
+                        alt="{{ $banner->title }}"
+                        class="w-full h-full object-cover opacity-40">
+                    <div class="absolute inset-0 bg-gradient-to-r from-slate-900/95 via-slate-900/70 to-slate-900/40"></div>
+                </div>
+                
+                {{-- Content --}}
+                <div class="relative h-full max-w-7xl mx-auto px-6 md:px-12 flex items-center">
+                    <div class="max-w-2xl">
+                        {{-- Badge --}}
+                        <div class="inline-flex items-center gap-2 bg-amber-500/20 backdrop-blur-sm border border-amber-500/30 rounded-full px-4 py-1.5 mb-6">
+                            <span class="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></span>
+                            <span class="text-amber-300 text-xs font-medium tracking-wider uppercase">New Collection</span>
+                        </div>
+                        
+                        @if($banner->title)
+                        <h1 class="jewelry-serif text-4xl md:text-6xl lg:text-7xl font-light text-white mb-6 leading-tight">
+                            {{ $banner->title }}
+                        </h1>
+                        @endif
+                        
+                        @if($banner->subtitle)
+                        <p class="text-lg md:text-xl text-gray-300 mb-8 leading-relaxed max-w-xl">
+                            {{ $banner->subtitle }}
+                        </p>
+                        @endif
+                        
+                        @if($banner->link)
+                        <div class="flex flex-wrap gap-4">
+                            <a href="{{ $banner->link }}" 
+                                class="group inline-flex items-center gap-3 bg-amber-600 hover:bg-amber-500 text-white px-8 py-4 rounded-full font-medium transition-all shadow-lg hover:shadow-xl hover:scale-105">
+                                <span>Shop Collection</span>
+                                <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                            </a>
+                            <a href="{{ route('search') }}" 
+                                class="inline-flex items-center gap-3 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white px-8 py-4 rounded-full font-medium transition-all border border-white/20">
+                                <span>View All</span>
+                            </a>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+                
+                {{-- Decorative Elements --}}
+                <div class="absolute top-20 right-20 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl"></div>
+                <div class="absolute bottom-20 right-40 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
+            </div>
+            @endforeach
+        </div>
+        
+        {{-- Navigation --}}
+        <div class="absolute inset-x-0 bottom-8 z-20">
+            <div class="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
+                {{-- Dots --}}
+                <div class="flex gap-3">
+                    @foreach($banners as $i => $banner)
+                    <button @click="current = {{ $i }}" 
+                        class="group relative">
+                        <div class="transition-all" 
+                            :class="current === {{ $i }} ? 'w-12 h-1 bg-amber-500' : 'w-8 h-1 bg-white/30 group-hover:bg-white/50'">
+                        </div>
+                    </button>
+                    @endforeach
+                </div>
+                
+                {{-- Arrow Buttons --}}
+                <div class="flex gap-3">
+                    <button @click="current = (current - 1 + total) % total" 
+                        class="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white transition-all hover:scale-110">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button @click="current = (current + 1) % total" 
+                        class="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white transition-all hover:scale-110">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
                 </div>
             </div>
         </div>
-        @endforeach
-    </div>
-    
-    {{-- Navigation Dots --}}
-    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-        @foreach($banners as $i => $banner)
-        <button @click="current = {{ $i }}" 
-            class="w-2 h-2 rounded-full transition" 
-            :class="current === {{ $i }} ? 'bg-white w-8' : 'bg-white/50'"></button>
-        @endforeach
     </div>
 </section>
 @endif
@@ -94,8 +149,8 @@
 <section class="py-12 bg-stone-50">
     <div class="max-w-7xl mx-auto px-6 md:px-12">
         <div class="text-center mb-10 animate-fade-in-up">
-            <h2 class="jewelry-serif text-3xl md:text-4xl font-light text-gray-900 mb-3">Shop Money Magnet Stones</h2>
-            <p class="text-gray-600">Browse crystals and stones by category - All added by our trusted sellers</p>
+            <h2 class="jewelry-serif text-3xl md:text-4xl font-light text-gray-900 mb-3">Shop Crystal & Gemstones</h2>
+            <p class="text-gray-600">Browse crystals and stones by category</p>
         </div>
         
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
@@ -153,7 +208,7 @@
 <section class="py-12 bg-stone-50">
     <div class="max-w-7xl mx-auto px-6 md:px-12">
         <div class="text-center mb-10">
-            <h2 class="jewelry-serif text-3xl md:text-4xl font-light text-gray-900 mb-3">Featured Money Magnet Stones</h2>
+            <h2 class="jewelry-serif text-3xl md:text-4xl font-light text-gray-900 mb-3">Featured Crystal & gems stone</h2>
             <p class="text-gray-600">Powerful crystals for wealth, prosperity and abundance</p>
         </div>
         
@@ -229,9 +284,9 @@
             </div>
             <div>
                 <p class="text-amber-300 text-sm tracking-[0.3em] uppercase mb-4 animate-fade-in-up">About Our Marketplace</p>
-                <h2 class="jewelry-serif text-3xl md:text-4xl font-light mb-6 logo-shimmer">Money Magnet Stones & Healing Crystals</h2>
+                <h2 class="jewelry-serif text-3xl md:text-4xl font-light mb-6 logo-shimmer">Crystal & gems stone & Healing Crystals</h2>
                 <p class="text-gray-300 leading-relaxed mb-4">
-                    Welcome to the ultimate marketplace for money magnet stones, healing crystals, and spiritual gemstones. Our platform connects you with trusted sellers offering authentic crystals that attract wealth, prosperity, and positive energy.
+                    Welcome to the ultimate marketplace for Crystal & gems stone, healing crystals, and spiritual gemstones. Our platform connects you with trusted sellers offering authentic crystals that attract wealth, prosperity, and positive energy.
                 </p>
                 <p class="text-gray-300 leading-relaxed mb-6">
                     Each seller carefully curates their collection of powerful stones including Citrine, Pyrite, Green Aventurine, Tiger's Eye, and more - all designed to help you manifest abundance and financial success.

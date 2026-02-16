@@ -47,12 +47,63 @@ class HomeController extends Controller
     public function search()
     {
         $q = request('q');
-        $products = Product::approved()->active()
-            ->where(fn($query) => $query->where('name', 'like', "%{$q}%")->orWhere('description', 'like', "%{$q}%")->orWhere('brand', 'like', "%{$q}%"))
-            ->with('seller', 'category')
-            ->paginate(12)->appends(['q' => $q]);
+        $sort = request('sort', 'relevance');
+        
+        $query = Product::approved()->active()->where('stock', '>', 0); // Only available products
+        
+        // Search query
+        if ($q) {
+            $query->where(function($query) use ($q) {
+                $query->where('name', 'like', "%{$q}%")
+                      ->orWhere('description', 'like', "%{$q}%")
+                      ->orWhere('brand', 'like', "%{$q}%")
+                      ->orWhereHas('category', function($query) use ($q) {
+                          $query->where('name', 'like', "%{$q}%");
+                      });
+            });
+        }
+        
+        // Sorting
+        $query = match($sort) {
+            'price_low' => $query->orderBy('price'),
+            'price_high' => $query->orderByDesc('price'),
+            'newest' => $query->latest(),
+            'popular' => $query->orderByDesc('views'),
+            default => $query->orderByRaw("
+                CASE 
+                    WHEN name LIKE ? THEN 1
+                    WHEN name LIKE ? THEN 2
+                    WHEN description LIKE ? THEN 3
+                    ELSE 4
+                END
+            ", ["{$q}%", "%{$q}%", "%{$q}%"])->latest(),
+        };
+        
+        $products = $query->with('seller', 'category')->paginate(12)->appends(request()->query());
+        
+        // Save search history
+        if ($q && strlen($q) >= 2) {
+            \App\Models\SearchHistory::create([
+                'user_id' => auth()->id(),
+                'query' => $q,
+                'ip_address' => request()->ip(),
+                'results_count' => $products->total(),
+            ]);
+        }
+        
+        // Get related categories for filters
+        $categories = \App\Models\Category::whereHas('products', function($query) use ($q) {
+            $query->approved()->active()->where('stock', '>', 0);
+            if ($q) {
+                $query->where(function($query) use ($q) {
+                    $query->where('name', 'like', "%{$q}%")
+                          ->orWhere('description', 'like', "%{$q}%")
+                          ->orWhere('brand', 'like', "%{$q}%");
+                });
+            }
+        })->withCount('products')->limit(10)->get();
 
-        return view('search', compact('products', 'q'));
+        return view('search', compact('products', 'q', 'categories', 'sort'));
     }
 
     public function product(Product $product)

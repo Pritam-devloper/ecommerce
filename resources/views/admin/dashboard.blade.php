@@ -12,7 +12,7 @@
     <div class="flex items-center justify-between">
         <div>
             <h2 class="text-2xl font-bold mb-2">Welcome to Your Shiivaraa Store</h2>
-            <p class="text-gray-200">Manage your money magnet stones and spiritual crystals business</p>
+            <p class="text-gray-200">Manage your Crystal & gems stone and spiritual crystals business</p>
         </div>
         <div class="hidden md:block">
             <i class="fas fa-gem text-amber-400 text-6xl opacity-20"></i>
@@ -54,7 +54,7 @@
             </div>
         </div>
         <p class="text-3xl font-bold text-gray-900">{{ $totalProducts }}</p>
-        <p class="text-xs text-gray-500 mt-2">Money magnet stones</p>
+        <p class="text-xs text-gray-500 mt-2">Crystal & gems stone</p>
     </div>
 
     <div class="bg-white rounded-xl shadow-sm p-6 border-l-4 border-amber-500">

@@ -4,7 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'AbhiShop - Online Shopping')</title>
+    <title>@yield('title', 'Shiivaraa - Money Magnet Stones & Spiritual Crystals')</title>
+    
+    {{-- Favicon --}}
+    <link rel="icon" type="image/png" href="{{ asset('logo.jpg') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('logo.jpg') }}">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -86,7 +91,7 @@
                     <span class="jewelry-serif text-3xl font-light tracking-wider logo-shimmer transition-all duration-300 group-hover:scale-105">
                         Shiivaraa
                     </span>
-                    <span class="text-[9px] tracking-widest text-gray-500 uppercase">Money Magnet Stones</span>
+                    <span class="text-[9px] tracking-widest text-gray-500 uppercase">Crystal & gems stone</span>
                 </a>
 
                 {{-- Desktop Navigation --}}
@@ -186,18 +191,150 @@
         </div>
     </header>
 
-    {{-- Search Overlay --}}
-    <div x-data="{ open: false }" @toggle-search.window="open = !open">
-        <div x-show="open" x-cloak class="fixed inset-0 bg-black/70 z-50 flex items-start justify-center pt-32" @click="open = false">
-            <div class="w-full max-w-2xl px-6" @click.stop>
-                <form action="{{ route('search') }}" method="GET" class="relative">
-                    <input type="text" name="q" value="{{ request('q') }}" placeholder="Search for jewellery, collections..."
-                        class="w-full px-6 py-4 text-lg bg-white focus:outline-none shadow-2xl" autocomplete="off" autofocus>
-                    <button type="submit" class="absolute right-0 top-0 h-full px-6 text-gray-600 hover:text-amber-700">
-                        <i class="fas fa-search text-xl"></i>
-                    </button>
-                </form>
-                <button @click="open = false" class="absolute top-4 right-4 text-white text-3xl hover:text-amber-300">
+    {{-- Search Overlay with Live Suggestions --}}
+    <div x-data="{ 
+        open: false, 
+        query: '', 
+        suggestions: [],
+        recentSearches: [],
+        loading: false,
+        async loadRecentSearches() {
+            try {
+                const response = await fetch('/api/recent-searches');
+                const data = await response.json();
+                this.recentSearches = data;
+            } catch (error) {
+                console.error('Error loading recent searches:', error);
+            }
+        },
+        async searchSuggestions() {
+            if (this.query.length < 2) {
+                this.suggestions = [];
+                return;
+            }
+            this.loading = true;
+            try {
+                const response = await fetch(`/api/search-suggestions?q=${encodeURIComponent(this.query)}`);
+                const data = await response.json();
+                this.suggestions = data;
+            } catch (error) {
+                console.error('Search error:', error);
+            }
+            this.loading = false;
+        }
+    }" 
+    @toggle-search.window="open = !open; if(open) { $nextTick(() => { $refs.searchInput.focus(); loadRecentSearches(); }) }">
+        <div x-show="open" x-cloak class="fixed inset-0 bg-black/70 z-50 flex items-start justify-center pt-20" @click="open = false">
+            <div class="w-full max-w-3xl px-6" @click.stop>
+                {{-- Search Box --}}
+                <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+                    <form action="{{ route('search') }}" method="GET" class="relative">
+                        <div class="flex items-center px-6 py-4 border-b">
+                            <i class="fas fa-search text-gray-400 text-xl mr-4"></i>
+                            <input 
+                                type="text" 
+                                name="q" 
+                                x-ref="searchInput"
+                                x-model="query"
+                                @input.debounce.300ms="searchSuggestions()"
+                                value="{{ request('q') }}" 
+                                placeholder="Search for crystals, gemstones, money magnets..."
+                                class="flex-1 text-lg focus:outline-none"
+                                autocomplete="off">
+                            <button type="submit" class="ml-4 bg-amber-600 text-white px-6 py-2 rounded-lg hover:bg-amber-700 transition text-sm font-medium">
+                                Search
+                            </button>
+                        </div>
+                    </form>
+                    
+                    {{-- Live Suggestions --}}
+                    <div x-show="suggestions.length > 0 || loading" class="max-h-96 overflow-y-auto">
+                        {{-- Loading State --}}
+                        <div x-show="loading" class="p-8 text-center">
+                            <i class="fas fa-spinner fa-spin text-amber-600 text-2xl"></i>
+                            <p class="text-gray-500 mt-2 text-sm">Searching...</p>
+                        </div>
+                        
+                        {{-- Products --}}
+                        <div x-show="!loading && suggestions.products && suggestions.products.length > 0">
+                            <div class="px-6 py-3 bg-gray-50 border-b">
+                                <h3 class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Available Products</h3>
+                            </div>
+                            <template x-for="product in suggestions.products" :key="product.id">
+                                <a :href="product.url" class="flex items-center gap-4 px-6 py-3 hover:bg-stone-50 transition border-b border-gray-100">
+                                    <img :src="product.image" :alt="product.name" class="w-12 h-12 object-cover rounded">
+                                    <div class="flex-1">
+                                        <p class="font-medium text-gray-900" x-text="product.name"></p>
+                                        <div class="flex items-center gap-2 mt-1">
+                                            <span class="text-xs text-gray-500" x-text="product.category"></span>
+                                            <span class="text-xs text-green-600 font-medium" x-text="'• ' + product.stock + ' in stock'"></span>
+                                        </div>
+                                    </div>
+                                    <p class="font-semibold text-amber-600" x-text="'₹' + product.price"></p>
+                                </a>
+                            </template>
+                        </div>
+                        
+                        {{-- Categories --}}
+                        <div x-show="!loading && suggestions.categories && suggestions.categories.length > 0">
+                            <div class="px-6 py-3 bg-gray-50 border-b">
+                                <h3 class="text-xs font-semibold text-gray-600 uppercase tracking-wider">Categories</h3>
+                            </div>
+                            <template x-for="category in suggestions.categories" :key="category.id">
+                                <a :href="category.url" class="flex items-center gap-3 px-6 py-3 hover:bg-stone-50 transition border-b border-gray-100">
+                                    <i class="fas fa-tag text-amber-600"></i>
+                                    <span class="text-gray-900" x-text="category.name"></span>
+                                    <span class="text-xs text-gray-500" x-text="category.count + ' available'"></span>
+                                </a>
+                            </template>
+                        </div>
+                        
+                        {{-- No Results --}}
+                        <div x-show="!loading && suggestions.products && suggestions.products.length === 0 && query.length >= 2" class="p-8 text-center">
+                            <i class="fas fa-search text-gray-300 text-3xl mb-3"></i>
+                            <p class="text-gray-600">No available products found for "<span x-text="query"></span>"</p>
+                            <p class="text-sm text-gray-500 mt-2">Try different keywords or check back later</p>
+                        </div>
+                    </div>
+                    
+                    {{-- Recent & Popular Searches --}}
+                    <div x-show="query.length === 0" class="p-6 space-y-6">
+                        {{-- Recent Searches --}}
+                        <div x-show="recentSearches.length > 0">
+                            <h3 class="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                <i class="fas fa-history"></i>
+                                Recent Searches
+                            </h3>
+                            <div class="flex flex-wrap gap-2">
+                                <template x-for="search in recentSearches" :key="search">
+                                    <a :href="`{{ route('search') }}?q=${encodeURIComponent(search)}`" 
+                                        class="px-4 py-2 bg-stone-100 hover:bg-stone-200 rounded-full text-sm text-gray-700 transition flex items-center gap-2">
+                                        <i class="fas fa-clock text-xs text-gray-400"></i>
+                                        <span x-text="search"></span>
+                                    </a>
+                                </template>
+                            </div>
+                        </div>
+                        
+                        {{-- Popular Searches --}}
+                        <div>
+                            <h3 class="text-xs font-semibold text-gray-600 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                <i class="fas fa-fire"></i>
+                                Popular Searches
+                            </h3>
+                            <div class="flex flex-wrap gap-2">
+                                <a href="{{ route('search', ['q' => 'citrine']) }}" class="px-4 py-2 bg-amber-50 hover:bg-amber-100 rounded-full text-sm text-gray-700 transition">Citrine</a>
+                                <a href="{{ route('search', ['q' => 'pyrite']) }}" class="px-4 py-2 bg-amber-50 hover:bg-amber-100 rounded-full text-sm text-gray-700 transition">Pyrite</a>
+                                <a href="{{ route('search', ['q' => 'green aventurine']) }}" class="px-4 py-2 bg-amber-50 hover:bg-amber-100 rounded-full text-sm text-gray-700 transition">Green Aventurine</a>
+                                <a href="{{ route('search', ['q' => 'tiger eye']) }}" class="px-4 py-2 bg-amber-50 hover:bg-amber-100 rounded-full text-sm text-gray-700 transition">Tiger's Eye</a>
+                                <a href="{{ route('search', ['q' => 'money magnet']) }}" class="px-4 py-2 bg-amber-50 hover:bg-amber-100 rounded-full text-sm text-gray-700 transition">Money Magnet</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                {{-- Close Button --}}
+                <button @click="open = false" class="absolute top-4 right-4 text-white text-3xl hover:text-amber-300 transition">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -311,9 +448,9 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 pb-12 border-b border-slate-700">
                 <div>
                     <h3 class="jewelry-serif text-2xl text-white mb-2 logo-shimmer">Shiivaraa</h3>
-                    <p class="text-xs text-amber-400 uppercase tracking-wider mb-4">Money Magnet Stones Marketplace</p>
+                    <p class="text-xs text-amber-400 uppercase tracking-wider mb-4">Crystal & gems stone Marketplace</p>
                     <p class="text-gray-400 leading-relaxed mb-6">
-                        Your trusted marketplace for authentic money magnet stones, healing crystals, and spiritual gemstones from verified sellers worldwide.
+                        Your trusted marketplace for authentic Crystal & gems stone, healing crystals, and spiritual gemstones from verified sellers worldwide.
                     </p>
                     <div class="flex gap-4 text-lg">
                         <a href="#" class="hover:text-amber-400 transition transform hover:scale-110"><i class="fab fa-facebook-f"></i></a>

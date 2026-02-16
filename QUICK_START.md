@@ -42,7 +42,7 @@ php artisan db:seed
 - Reports
 
 ### Customer Features
-- Browse money magnet stones
+- Browse Crystal & gems stone
 - Add to cart & checkout
 - Wishlist functionality
 - Order tracking
@@ -86,7 +86,7 @@ php artisan serve
 ## 🎨 Branding
 
 - **Website Name**: Shiivaraa
-- **Tagline**: Money Magnet Stones
+- **Tagline**: Crystal & gems stone
 - **Theme**: Amber/Gold (#d97706, #fbbf24, #f59e0b)
 - **Logo**: Animated shimmer effect
 
@@ -133,4 +133,4 @@ php artisan serve
 
 ## 🎉 You're Ready!
 
-Your single-seller Shiivaraa Money Magnet Stones website is ready to use. Login as admin to start adding products and managing your store!
+Your single-seller Shiivaraa Crystal & gems stone website is ready to use. Login as admin to start adding products and managing your store!
