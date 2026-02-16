@@ -1,7 +1,7 @@
 # Single Seller Implementation - Complete
 
 ## Overview
-Shiivaraa is now a **single-seller e-commerce platform** where the admin and seller are the same person. The owner manages their money magnet stones business through the admin panel.
+Shiivaraa is now a **single-seller e-commerce platform** where the admin and seller are the same person. The owner manages their Crystal & gems stone business through the admin panel.
 
 ## Key Concept
 - **One Owner**: The website has only ONE seller who is also the admin
@@ -15,7 +15,7 @@ Shiivaraa is now a **single-seller e-commerce platform** where the admin and sel
 1. **Login**: Use email `admin@shiivaraa.com` (configured in .env as SELLER_EMAIL)
 2. **Automatic Redirect**: Immediately redirected to `/admin/dashboard`
 3. **Manage Everything**:
-   - Add/edit products (your money magnet stones)
+   - Add/edit products (your Crystal & gems stone)
    - Create categories
    - Upload banners
    - Process orders
@@ -98,7 +98,7 @@ This email address has admin/seller privileges. Anyone logging in with this emai
 ## Branding
 
 ### Store Name
-**Shiivaraa** - Money Magnet Stones
+**Shiivaraa** - Crystal & gems stone
 
 ### Color Scheme
 - Primary: Amber/Gold (#d97706, #fbbf24, #f59e0b)
@@ -107,7 +107,7 @@ This email address has admin/seller privileges. Anyone logging in with this emai
 
 ### Logo
 - Animated shimmer effect on "Shiivaraa" text
-- Tagline: "Money Magnet Stones"
+- Tagline: "Crystal & gems stone"
 
 ## What Was Removed
 
@@ -246,6 +246,6 @@ return redirect()->route('home');
 
 ## Conclusion
 
-Shiivaraa is now a streamlined single-seller platform where you (the owner) have complete control over your money magnet stones business. The admin panel is your personal store management system, designed for efficiency and ease of use.
+Shiivaraa is now a streamlined single-seller platform where you (the owner) have complete control over your Crystal & gems stone business. The admin panel is your personal store management system, designed for efficiency and ease of use.
 
 **You are the seller. You are the admin. You are Shiivaraa.**

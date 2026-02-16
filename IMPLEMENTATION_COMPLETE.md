@@ -27,7 +27,7 @@ Your Shiivaraa website is now a **single-seller e-commerce platform** where YOU 
 ### 4. Updated Branding
 - ✅ "Shiivaraa" branding throughout admin panel
 - ✅ Amber/gold color scheme
-- ✅ Money magnet stones focus
+- ✅ Crystal & gems stone focus
 
 ## 📊 Dashboard Overview
 
@@ -81,7 +81,7 @@ Access: Customer shopping features
 2. Enter: `admin@shiivaraa.com` / `password`
 3. You'll be redirected to `/admin/dashboard`
 4. Manage your store:
-   - Add products (money magnet stones)
+   - Add products (Crystal & gems stone)
    - Create categories
    - Upload homepage banners
    - Process customer orders
@@ -221,7 +221,7 @@ php artisan serve
 
 ## 🎊 Success!
 
-Your Shiivaraa Money Magnet Stones website is now a complete single-seller e-commerce platform. You have full control as the owner/admin/seller through one unified dashboard.
+Your Shiivaraa Crystal & gems stone website is now a complete single-seller e-commerce platform. You have full control as the owner/admin/seller through one unified dashboard.
 
 **Login now and start managing your store!**
 
